@@ -47,20 +47,19 @@ JOIN Genre g ON g.Id = s.GenreId
 GROUP BY g.Label
 
 -- Using MAX() function, write a select statement to find the album with the longest duration. The result should display the album title and the duration.
-SELECT a2.AlbumLength AS AlbumLength, a.Title
+SELECT a.AlbumLength, a.Title
 FROM Album a
-Join (SELECT Max(a.AlbumLength) as AlbumLength, a.Id FROM Album a
-GROUP BY a.Id) as a2
-    ON a2.Id = a.Id
+WHERE 
+    a.AlbumLength = (SELECT Max(AlbumLength) FROM Album);
 
 -- Using MAX() function, write a select statement to find the song with the longest duration. The result should display the song title and the duration.
-SELECT MAX(s.SongLength) AS SongLength, s.Title
+SELECT s.SongLength, s.Title
 FROM Song s
-GROUP BY s.Title;
+WHERE s.SongLength = (SELECT Max(SongLength) FROM Song);
 
 -- Modify the previous query to also display the title of the album.
-SELECT MAX(s.SongLength) AS SongLength, s.Title, a.Title
+SELECT s.SongLength AS SongLength, s.Title, a.Title
 FROM Song s
 JOIN Album a
     ON a.Id = s.AlbumId
-GROUP BY s.Title, a.Title;
+WHERE s.SongLength = (SELECT Max(SongLength) FROM Song);
